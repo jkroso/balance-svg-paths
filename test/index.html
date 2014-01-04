@@ -1,0 +1,103 @@
+
+<title>balance svg path tests</title>
+
+<style>
+  body {
+    font: 14px/1 "Helvetica Neue", Helvetica, Arial, sans-serif;
+    text-align: center;
+    color: #4c4c4c;
+    margin: 0;
+    padding: 30px;
+  }
+
+  #visual {
+    margin: -198px 0 0 -198px;
+    position: absolute;
+    height: 397px;
+    width: 397px;
+    left: 50%;
+    top: 50%;
+    padding: 0;
+  }
+
+  #stats {
+    border: 1px solid #83abe6;
+    border-radius: 3px;
+    background: white;
+    position: fixed;
+    padding: 2px;
+    bottom: 30;
+    left: 30;
+  }
+
+  #stats p {
+    font: 14px/1 Courier, sans-serif;
+    text-align: left;
+    margin: 3;
+  }
+
+  #path {
+    stroke-linecap: round;
+    stroke-width: 5;
+    stroke: #00b716;
+    fill: none;
+  }
+</style>
+
+<svg id="background" xmlns='http://www.w3.org/2000/svg' width='18' height='18'>
+  <path d='M0 0 0 18 M0 0 18 0' fill='white' stroke-width='1' stroke='#83abe6'/>
+  <rect x='1' y='1' width='17' height='17' fill='white'/>
+</svg>
+
+<h1 id="title"></h1>
+
+<div id="stats">
+  <p><span>from: </span><span id="fromSpan"></span></p>
+  <p><span>to: </span><span id="toSpan"></span></p>
+</div>
+
+<svg id="visual" xmlns='http://www.w3.org/2000/svg'>
+  <path id="path"></path>
+</svg>
+
+<script>
+  var toString = require('serialize-svg-path')
+  var tween = require('string-tween')
+  var normalize = require('fcomp')(
+    require('parse-svg-path'),
+    require('abs-svg-path'),
+    require('normalize-svg-path'),
+    require('rel-svg-path'))
+  var cases = require('./cases')
+  var balance = require('..')
+  var raf = require('raf')
+  var now = require('now')
+  // var only = cases[3]
+  cases = cases.filter(function(kase){
+    return typeof only == 'undefined' || kase == only
+  })
+
+  var blob = new Blob([background.outerHTML], {type : 'image/svg+xml'})
+  var img = 'url(' + URL.createObjectURL(blob) + ')'
+  visual.style.backgroundImage = img
+  background.parentElement.removeChild(background)
+
+  !function next(i){
+    var kase = cases[i]
+    if (!kase) return
+    if (kase.skip) return next(i + 1)
+    title.textContent = kase.title || ''
+    fromSpan.textContent = kase.from
+    toSpan.textContent = kase.to
+    var ends = balance(normalize(kase.from), normalize(kase.to || kase.from))
+    var frame = tween(toString(ends[0]), toString(ends[1]))
+    var duration = kase.duration || 1000
+    var start = now()
+    raf(function step(){
+      var progress = Math.min((now() - start) / duration, 1)
+      path.setAttribute('d', frame(progress))
+      if (progress == 1) next(i + 1)
+      else raf(step)
+    })
+  }(0)
+</script>

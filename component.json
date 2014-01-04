@@ -1,0 +1,9 @@
+{
+	"name": "balance-svg-paths",
+	"repo": "jkroso/balance-svg-paths",
+	"description": "balance svg paths",
+	"keywords": ["balance","paths","svg"],
+	"dependencies": {},
+	"scripts": ["index.js"],
+	"license": "MIT"
+}

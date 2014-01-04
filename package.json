@@ -1,0 +1,24 @@
+{
+  "name": "balance-svg-paths",
+  "version": "0.1.0",
+  "description": "balance svg paths",
+  "keywords": ["balance","svg","path","normalize","restructure"],
+  "dependencies": {},
+  "devDependencies": {
+    "serialize-svg-path": "*",
+    "normalize-svg-path": "*",
+    "serve": "jkroso/serve",
+    "raf": "component/raf",
+    "parse-svg-path": "*",
+    "abs-svg-path": "*",
+    "rel-svg-path": "*",
+    "string-tween": "*",
+    "fcomp": "*",
+    "jsmd": "*"
+  },
+  "repository": "git://github.com/jkroso/balance-svg-paths.git",
+  "bugs": "https://github.com/jkroso/balance-svg-paths/issues",
+  "author": "Jake Rosoman",
+  "files": ["index.js"],
+  "license": "MIT"
+}
